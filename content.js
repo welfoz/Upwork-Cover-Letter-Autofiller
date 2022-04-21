@@ -23,7 +23,6 @@ if (indexProposal != -1) {
 
 document.addEventListener("animationend", (event) => {
     console.log(event);
-    console.log(event.srcElement);
     console.log(event.target.className);
     if ((document.location.pathname.length > 17) && (event.target.className == "up-slider")) {
  
