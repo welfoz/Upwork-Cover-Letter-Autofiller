@@ -1,6 +1,4 @@
 
-// console.log('content loaded clean');
-
 // when we directly load the job url type of https://www.upwork.com/jobs/~014bbfdb67beb1b160
 
 let url = document.location.href;
@@ -40,8 +38,8 @@ return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function findReviews() {
-    var totalreview = "";
-    var lastreviewlooked = 0;
+    let totalreview = "";
+    let lastreviewlooked = 0;
 
     // loop until stringnumberofreviews.length = 0; or that we have 100 reviews 
     // == means that the js-show-more <a> </a> isn't display anymore 
@@ -63,7 +61,7 @@ async function findReviews() {
 
         
         
-        var resulttotal = document.querySelectorAll("[id^=up-truncation]");
+        let resulttotal = document.querySelectorAll("[id^=up-truncation]");
         // console.log(resulttotal);
         // console.log("last review : " + lastreviewlooked);
         for (let i = lastreviewlooked; i < resulttotal.length; i++) {
@@ -75,7 +73,7 @@ async function findReviews() {
 
 
             // test if review belongs to the freelancer
-                let tofreelance = document.evaluate(`//*[@id="up-truncation-${numbertruncation}"]/../../../../../..//text()`, document, null, XPathResult.STRING_TYPE, null );
+                const tofreelance = document.evaluate(`//*[@id="up-truncation-${numbertruncation}"]/../../../../../..//text()`, document, null, XPathResult.STRING_TYPE, null );
                 // console.log(tofreelance.stringvalue);   
                 if (tofreelance.stringValue.includes("reelancer") == false) {
                     totalreview += resulttotal[i].innerText.replaceAll(/\.|,|\!|\;|\:|\-/g, "").replaceAll("\n", " ") + " ";
@@ -96,45 +94,68 @@ async function findReviews() {
 
         // console.log(totalreview);
         // console.log(Date.now());
-
+        console.log(totalreview);
         findNames(totalreview);
 }
 
 function getall() 
 {
-    // await sleep(2000); // prb not stable => better to have a setInterval 
-    var compteurInterval = 0; // stop setInterval after 5 seconds => 10 iterations
-    const getReviewInterval = setInterval(getReview, 500);
+    // WE NEED THIS COMPTEUR BECAUSE the result takes time to arrive as it refers to injected html by js
+    // let compteurInterval = 0; // stop setInterval after 5 seconds => 10 iterations
+    // const getReviewInterval = setInterval(getReview, 500);
     
-    function clearint () {
-        clearInterval(getReviewInterval);
-    }
-    function getReview () 
-    {
-        // console.log("int");
-        var result = document.querySelectorAll("[id^=up-truncation]");
-        // console.log(result);
+    // function clearint () {
+    //     clearInterval(getReviewInterval);
+    // }
+    // function getReview () 
+    // {
+    //     // console.log("int");
+    //     let result = document.querySelectorAll("[id^=up-truncation]");
+    //     // console.log(result);
 
 
-        if ((result.length > 0) || (compteurInterval > 10)) {
-            // console.log("int cleared !");
-            // clearInterval(getReviewInterval);
+    //     if ((result.length > 0) || (compteurInterval > 10)) {
+    //         // console.log("int cleared !");
+    //         // clearInterval(getReviewInterval);
         
-            clearint();
+    //         clearint();
             
-            if (compteurInterval <= 10) {
-                findReviews();
+    //         if (compteurInterval <= 10) {
+    //             findReviews();
+    //         }
+    //     }
+    //     compteurInterval++;
+    // }
+    const observer = new MutationObserver(function (mutations) {
+
+        let stop = false;
+        let already = false;
+        mutations.forEach(function (mutation) {
+            if (mutation.target.id.slice(0, 14) == 'up-truncation-') {
+                stop = true; 
+                console.log("fnid review")
+                if (!already) {
+                    console.log("not alreaadu")
+                    findReviews();
+                    already = true;
+                }
             }
+        }) 
+        if (stop) {
+            observer.disconnect();
         }
-        compteurInterval++;
-    }
+    });
+    observer.observe(document, {
+        subtree: true, 
+        attributes: true
+    })
 }
 
 function findNames(text) {
-    var strArray = text.split(" ");
-    var nameFind = false;
-    var name = "";
-    var potentialNames = {};
+    let strArray = text.split(" ");
+    let nameFind = false;
+    let name = "";
+    let potentialNames = {};
     // console.log(strArray);
     strArray.forEach(searchNames);
     function searchNames(value, index, ary) {
@@ -154,11 +175,11 @@ function findNames(text) {
     // => there is big chance that it isn t a name but just a mistake | a word which isn t in our list 
     if (nameFind) { //&& (cpt > 1)) {
         // find the world that occur the most often in the list to maximize our chances to find the real name  
-        var name = "";
+        let name = "";
     
         let keys = Object.keys(potentialNames);
 
-        var max = 0;
+        let max = 0;
         for(let i = 0; i < keys.length; i++) {
             let key = keys[i];
             // console.log(key + " = " + potentialNames[key]);
@@ -183,7 +204,7 @@ function storeName(name) {
     let job_id = document.location.pathname;
     // console.log(job_id);
     let jobIdExtracted = job_id.slice(job_id.indexOf("~"));
-    var jobId = {};
+    let jobId = {};
     jobId[jobIdExtracted] = beautifulName;
     // console.log(jobId);
     try {
@@ -201,10 +222,10 @@ function storeName(name) {
 }
 
 function fillHiName(jobID) {
-    var cptTry = 0; // will compt the number of times we try to get storage
-    const getNameInterval = setInterval(getName, 2000);
-    var name = "";
+    let name = "";
     function getName() {
+        return new Promise((resolve, reject) => {
+
         // console.log('get name ' + cptTry);
         chrome.storage.local.get(jobID, function(result){ // callback => asynchrone 
             // .get => attente + execution de la suite du block 
@@ -216,157 +237,261 @@ function fillHiName(jobID) {
             if (Object.values(result).length > 0) {
                 // console.log("we have it in stock !");
                 name = "Hi " + Object.values(result)[0] + "!";
+                resolve(name);
                 // console.log("int cleared !");
-                clearInterval(getNameInterval);
+            } else {
+                name = "Hi !";
+                resolve(name);
             }
+            console.log(name);
         });
-        if (cptTry > 3) {
-            clearInterval(getNameInterval);
-            name = 'Hi !'
-            // console.log('int name cleared too many trying');
-        }
-        cptTry++;
+    });
     }
 
     
-    var ctpTrySign = 0; // will compt the number of times we try to get storage
-    var signatureFind = "No signature defined :(";
-    const getSignInterval = setInterval(getSign, 2000);
+    let signatureFind = "";
     function getSign() {
-        // console.log('get sign ' + ctpTrySign);
-        chrome.storage.local.get("signature", function(sign) {
-            if (sign.signature != null) {
-                signatureFind = sign.signature;
-                clearInterval(getSignInterval);
-                // console.log("sign find !" + signatureFind);
-            }
-            if (ctpTrySign > 3) {
-                clearInterval(getSignInterval);
-                // console.log('int name cleared too many trying');
-            }
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get("signature", function(sign) { 
+                console.log(sign.signature);
+                if (sign.signature != null) {
+                    resolve(sign.signature);
+                    signatureFind = sign.signature;
+                } else {
+                    resolve("none sign");
+                }
+            });
         });
-        ctpTrySign++;
     }
     
-
-    var cptTryTextarea = 0; // will compt the number of times we try to get storage
-    var textArea = null;
-    const getTextareaInterval = setInterval(getTextarea, 500);
+    let cptTryTextarea = 0; // will compt the number of times we try to get storage
+    let textArea = null;
     function getTextarea() {
-        // console.log('get textarea ' + cptTryTextarea);
-        let textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
-            if (textAreaTest != null) {
-                textArea = textAreaTest;
-                clearInterval(getTextareaInterval);
-                // console.log("sign find !" + textArea);
-                    textArea.value =  name + '\n\n'+ signatureFind;
-                    // console.log(textArea.value);
-                var container =  document.querySelector("[id='cover_letter_label']");
-                var toInsert = document.createElement("input");
-                toInsert.setAttribute('type', 'submit');
-                toInsert.setAttribute('class', 'button-74');
-                toInsert.setAttribute('value', 'Refresh');
+        return new Promise((resolve, reject) => {
+            // const getTextareaInterval = setInterval(getText, 500);
+            function getText() {
+                console.log('get textarea ' + cptTryTextarea);
+                let textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
+                if (textAreaTest != null) {
+                    textArea = textAreaTest;
+                    // clearInterval(getTextareaInterval);
+                    // console.log("sign find !" + textArea);
+                        textArea.value =  name + '\n\n'+ signatureFind;
+                        // console.log(textArea.value);
+                    let container =  document.querySelector("[id='cover_letter_label']");
+                    let toInsert = document.createElement("input");
+                    toInsert.setAttribute('type', 'submit');
+                    toInsert.setAttribute('class', 'button-74');
+                    toInsert.setAttribute('value', 'Refresh');
 
 
-                // console.log(toInsert);
-                // console.log(container);
-                container.appendChild(toInsert);
-                listenRefresh(toInsert, jobID);
+                    // console.log(toInsert);
+                    // console.log(container);
+                    container.appendChild(toInsert);
+                    listenRefresh(toInsert, jobID);
+                    resolve('textarea find');
 
+                } else {
+                    resolve("textarea not find");
+                }
+            //     if (cptTryTextarea > 30) {
+            //         clearInterval(getTextareaInterval);
+            //         resolve("textarea not find");
+            //         console.log('int name cleared too many trying');
+            //     }
+            // cptTryTextarea++;
             }
-            if (cptTryTextarea > 30) {
-                clearInterval(getTextareaInterval);
-                // console.log('int name cleared too many trying');
+     
+
+        // observer to know when the textarea is ready 
+    const observer = new MutationObserver(function (mutations) {
+        // console.log(mutations);
+        let stop = false;
+        let already = false;
+        mutations.forEach(function (mutation) {
+            if (mutation.target.className.includes('up-loader-container')) {
+                stop = true;
+                if (!already) {
+                    console.log("gogo")
+                    getText();
+                    already = true;
+                }
             }
-        cptTryTextarea++;
+        });
+        if (stop) {
+            observer.disconnect()
+        }
+    }); 
+    observer.observe(document, {
+        subtree: true, 
+        childList : true
+    });
+
+        });
     }  
     
+    Promise.all([getName(), getSign(), getTextarea()]).then((messages) => {
+        console.log("promise finished");
+        console.log(messages);
+        fill();
+    })
     
-    var cptFill = 0;
-    const fillInterval = setInterval(fill, 2000);
-
     function fill() {
         
-        // console.log(cptFill);
-        if (cptFill > 3) {
-            clearInterval(fillInterval);
-            // console.log("int clear cpttry > 3"); 
-            textArea.value = name + "\n\n" + signatureFind;
-        }
-        if ((textArea != null) && (name != "") && (signatureFind != "No signature defined :(")) {
             // console.log("area defined");
-            // console.log(textArea);
-            textArea.value =  name + "\n\n"+ signatureFind;
+             console.log(textArea);
+             setTimeout(() => {
+                // settimeout because we cant instantly write in the textArea
+                textArea.value =  name + "\n\n"+ signatureFind;
+                console.log(textArea.value);
+             }, 2500);
             // console.log("int cleared !");
             
-            clearInterval(fillInterval);
-        }
+    }
         
             
-        cptFill++;
-    }
 
 }
 
 function listenRefresh(toListen, jobID) {
     toListen.addEventListener("click", event => {
-        // console.log(event);
+            // console.log(event);
             refreshDOM(jobID);
     })
 }
 
 function refreshDOM(jobID) {
 
-    var currentContent = findCurrentTextareaContent();
-    // console.log(currentContent);
-
-
-    getName();
-    var name = "";
+    let currentContent = findCurrentTextareaContent();
+    let name = "";
     function getName() {
+        return new Promise((resolve, reject) => {
+
         // console.log('get name ' + cptTry);
-        chrome.storage.local.get(jobID, function(result){
+        chrome.storage.local.get(jobID, function(result){ // callback => asynchrone 
+            // .get => attente + execution de la suite du block 
+            // that's why t es obligé de mettre un settimeout => car la suite du code est executé 
+            // avec la version asynchrone => la suite du code n est executé que quand recoit une reponse 
+            // pour permettre d attendre un temps maximal (timeout => race avec un timeout à l'intérieur)
             // console.log(result);
             
             if (Object.values(result).length > 0) {
                 // console.log("we have it in stock !");
                 name = "Hi " + Object.values(result)[0] + "!";
+                resolve(name);
                 // console.log("int cleared !");
             } else {
-                name = 'Hi !'
+                name = "Hi !";
+                resolve(name);
             }
+            console.log(name);
         });
+    });
     }
-    
-    var signatureFind = "No signature defined :(";
-    getSign();
-    function getSign() {
-        chrome.storage.local.get("signature", function(sign) {
-            if (sign.signature != null) {
-                signatureFind = sign.signature;
-                // console.log("sign find !" + signatureFind);
-            }
-        });
-    }
-    
 
-    var textArea = null;
-    getTextarea();
+    
+    let signatureFind = "";
+    function getSign() {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get("signature", function(sign) { 
+                console.log(sign.signature);
+                if (sign.signature != null) {
+                    resolve(sign.signature);
+                    signatureFind = sign.signature;
+                } else {
+                    resolve("none sign");
+                }
+            });
+        });
+    }
+    
+    let cptTryTextarea = 0; // will compt the number of times we try to get storage
+    let textArea = null;
     function getTextarea() {
-        let textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
-            if (textAreaTest != null) {
-                textArea = textAreaTest;
-                // console.log("sign find !" + textArea);
+        return new Promise((resolve, reject) => {
+            // const getTextareaInterval = setInterval(getText, 500);
+            function getText() {
+                console.log('get textarea ' + cptTryTextarea);
+                let textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
+                if (textAreaTest != null) {
+                    textArea = textAreaTest;
+                    // clearInterval(getTextareaInterval);
+                        textArea.value =  name + '\n\n'+ signatureFind;
+                    resolve('textarea find');
+
+                } else {
+                    resolve("textarea not find");
+                }
+            //     if (cptTryTextarea > 30) {
+            //         clearInterval(getTextareaInterval);
+            //         resolve("textarea not find");
+            //         // console.log('int name cleared too many trying');
+            //     }
+            // cptTryTextarea++;
             }
+     
+            getText();
+            }); 
+
+
     }  
     
+    Promise.all([getName(), getSign(), getTextarea()]).then((messages) => {
+        console.log("promise finished");
+        console.log(messages);
+        fill();
+    })
+
+    // console.log(currentContent);
+
+
+    // getName();
+    // let name = "";
+    // function getName() {
+    //     // console.log('get name ' + cptTry);
+    //     chrome.storage.local.get(jobID, function(result){
+    //         // console.log(result);
+            
+    //         if (Object.values(result).length > 0) {
+    //             // console.log("we have it in stock !");
+    //             name = "Hi " + Object.values(result)[0] + "!";
+    //             // console.log("int cleared !");
+    //         } else {
+    //             name = 'Hi !'
+    //         }
+    //     });
+    // }
     
-    setTimeout(fill, 500);
+    // let signatureFind = "No signature defined :(";
+    // getSign();
+    // function getSign() {
+    //     chrome.storage.local.get("signature", function(sign) {
+    //         if (sign.signature != null) {
+    //             signatureFind = sign.signature;
+    //             // console.log("sign find !" + signatureFind);
+    //         }
+    //     });
+    // }
+    
+
+    // let textArea = null;
+    // getTextarea();
+    // function getTextarea() {
+    //     let textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
+    //         if (textAreaTest != null) {
+    //             textArea = textAreaTest;
+    //             // console.log("sign find !" + textArea);
+    //         }
+    // }  
+    
+    
+    // setTimeout(fill, 500);
 
     function fill() {
         
         if (textArea != null) {
             // console.log("area defined");
+            console.log("on fill le refresh")
 
             textArea.value =  name + "\n\n"+ currentContent + '\n' +  signatureFind;
             // console.log("int cleared !");
@@ -139628,6 +139753,7 @@ array = [
     "Ralon",
     "Ralphie",
     "Ralphs",
+    "Ralph",
     "Ralphy",
     "Ralphy-lee",
     "Ralson",
