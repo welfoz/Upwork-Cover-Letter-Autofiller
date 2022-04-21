@@ -1,0 +1,154 @@
+.container {
+    padding : 10px;
+    background: #FFFEFC;
+    height: 100%;
+}
+.svgTrash {
+    vertical-align: middle;
+    width: 25px;
+}
+.button-74 {
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 0 13px;
+  line-height: 35px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin-top : 15px;
+  width: 100px;
+}
+
+.button-74:hover {
+  background-color: #FFFEFC;
+}
+
+.button-74:active {
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .button-74 {
+    min-width: 120px;
+    padding: 0 25px;
+  }
+}
+
+body {
+    margin : 0px;
+    background-color: #FFFEFC;
+}
+
+
+html {
+    width: 350px;
+    height: 250px;
+}
+
+
+[contentEditable=true]:empty:before{
+    content:attr(data-text)
+}
+
+.btnContainer {
+    display: flex;
+}
+.result {
+    background: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    padding : 6px;
+}
+
+.resultContainer {
+    border-color: #422800!important;
+    box-shadow: #422800 4px 4px 0 0;
+    border : 2px solid #422800;
+    margin-right: auto;
+    margin-left: auto;
+    display: none;
+    margin-top : 15px;
+    width: 280px;
+    min-height: 90px;
+    margin-bottom : 20px;
+}
+
+.textarea {
+    width : 280px;
+    height: auto;
+    min-height: 90px;
+    padding : 6px;
+    min-width: 200px;
+    background: white!important;
+    border-color: #422800!important;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+/*
+[contenteditable]:focus {
+    outline: 3px solid #422800;
+}*/
+
+[contenteditable] {
+    outline: 2px solid #422800;
+    box-shadow: #422800 4px 4px 0 0;
+}
+
+/**
+
+ Modern Browsers 
+.textarea::placeholder {
+    font-size: 1rem;
+    color: #9c9c9c;
+    font-family: 'Roboto', sans-serif;
+}
+
+WebKit, Edge /
+textarea::-webkit-input-placeholder {
+    font-size: 1rem;
+    color: #9c9c9c;
+    font-family: 'Roboto', sans-serif;
+}
+
+/ Firefox 4-18 /
+textarea:-moz-placeholder {
+    font-size: 1rem;
+    color: #9c9c9c;
+    font-family: 'Roboto', sans-serif;
+}
+
+/irefox 19+ *
+textarea::-moz-placeholder {
+    font-size: 1rem;
+    color: #9c9c9c;
+    font-family: 'Roboto', sans-serif;
+}
+
+/ IE 10-11 
+textarea:-ms-input-placeholder {
+    font-size: 1rem;
+    color: #9c9c9c;
+    font-family: 'Roboto', sans-serif;
+}
+
+/ Edge /
+textarea::-ms-input-placeholder {
+    font-size: 1rem;
+    color: #9c9c9c;
+    font-family: 'Roboto', sans-serif;
+} */

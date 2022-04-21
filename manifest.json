@@ -1,0 +1,41 @@
+{
+  "name": "Improve your Job Proposals (Upwork)",
+  "content_scripts": [
+    {
+      "run_at": "document_idle",
+      "matches": ["*://www.upwork.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "description": "Build an Extension!",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "webRequest",
+    "storage", 
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "content_security_policy": {
+    "extension_pages":"script-src 'self'; object-src 'self'"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources" :  ["popup.js"],
+      "matches" : [ "<all_urls>" ]
+    }
+  ], 
+  "icons" : {
+    "48" : "I16.png"
+  }
+
+}
