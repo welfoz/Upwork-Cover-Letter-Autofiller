@@ -1,5 +1,45 @@
+// let port;
+let port = chrome.runtime.connect({name: "from cs"});
+    // console.log(port);
+    // console.log(port);
+    // console.log(port);
+    // console.log(port);
+    // console.log(port);
+    // console.log(port + Date.now());
+// port.onDisconnect.addListener(function (event) {
+//     // met 5 mn à se deco tout seul 
+//     console.log('port disconneted' + date.now());
+//     console.log(event);
+// });
+function portCreation() {
+    port = chrome.runtime.connect({name: "from cs"});
+    console.log(port);
+    // console.log(port + Date.now());
+//     port.ondisconnect.addlistener(function(event) {
+    // met 5 mn à se deco tout seul 
+//     console.log('port disconneted' + date.now());
+//     console.log(event);
+// });
+}
+
+// window.addEventListener('load', function (event) {
+// 	// Log the state data to the console
+// 	console.log(event);
+// });
+// window.addEventListener('popstate', function (event) {
+// 	// Log the state data to the console
+// 	console.log(event);
+// });
+
+// window.addEventListener('hashchange', function() {
+//   console.log('The hash has changed!')
+// }, false);
+
+// }
+// console.log(port);
 
 // when we directly load the job url type of https://www.upwork.com/jobs/~014bbfdb67beb1b160
+// console.log("load");
 
 let url = document.location.href;
 let indexProposal = url.indexOf("proposals");
@@ -13,25 +53,50 @@ if (indexProposal != -1) {
     let indexJob = url.indexOf("job"); // job to be sure we aren't on the submit proposal page 
     // console.log(url, indexJob);
     if (url.slice(indexJob , indexJob + 6) == "jobs/~") {
-        // console.log("case of job url directly loaded");
+        console.log("case of job url directly loaded");
         getall();
     }
 }
 
-
-document.addEventListener("animationend", (event) => {
-    console.log(event);
-    console.log(event.target.className);
-    if ((document.location.pathname.length > 17) && (event.target.className == "up-slider")) {
+// the mutation observer est fire à toutes les mutations, for each, we check the url and the last url 
+// it is effective => when the url change, we know it fast
+// BUT it fires many many times 
+let lastUrl = location.href; 
+new MutationObserver(() => {
+  const url = location.href;
+  console.log(url, lastUrl);
+  if (url !== lastUrl) {
+    lastUrl = url;
+    if (url.length > 40) {
+        onUrlChange();
+  }
+  }
+}).observe(document, {subtree: true, childList: true});
  
-        // console.log(event.srcElement.className);
-        // console.log(document.location.href);
-        getall();
+ 
+function onUrlChange() {
+        console.log("getall launch because mutation animation fired");
 
-    } else {
-        // console.log("we move back");
-    }
-});
+        getall();
+}
+// document.addEventListener("animationend", (event) => {
+//     // console.log(event);
+//     // console.log(event.target.className);
+//     // console.log(Date.now() - lastAnimationEvent);
+//     if ((lastJobPath != document.location.pathname)&& (document.location.pathname.length > 17) && (event.target.className == "up-slider")) {
+//  // 300 milliseconds between the events 
+//         // console.log(event.srcElement.className);
+//         // console.log(document.location.href);
+//         // console.log(document.location.pathname);
+//         lastJobPath = document.location.pathname;
+//         console.log("getall launch because event animation fired");
+
+//         getall();
+
+//     } else {
+//         // console.log("we move back");
+//     }
+// });
 
 function sleep(ms) {
 return new Promise(resolve => setTimeout(resolve, ms));
@@ -50,7 +115,7 @@ async function findReviews() {
     while (((stringnumberofreviews.length > 0) && (loopcompteur < 10)) || (loopcompteur == 0)) 
     {
         // loopcompteur == 0 if there is less than ~ 10 reviews 
-        let numberofreviews = parseInt(stringnumberofreviews.replace(/\(|\s|\)/g, ''));// regex to have only the number ex : "( 42 )" => "42"
+        // let numberofreviews = parseInt(stringnumberofreviews.replace(/\(|\s|\)/g, ''));// regex to have only the number ex : "( 42 )" => "42"
         // console.log(numberofreviews);
         // console.log(document.querySelector(".js-show-more"));
         document.querySelector(".js-show-more") ? document.querySelector(".js-show-more").click() : null; // we simulate a click to show more reviews 
@@ -61,7 +126,7 @@ async function findReviews() {
 
         
         
-        let resulttotal = document.querySelectorAll("[id^=up-truncation]");
+        const resulttotal = document.querySelectorAll("[id^=up-truncation]");
         // console.log(resulttotal);
         // console.log("last review : " + lastreviewlooked);
         for (let i = lastreviewlooked; i < resulttotal.length; i++) {
@@ -127,13 +192,14 @@ function getall()
     //     compteurInterval++;
     // }
     const observer = new MutationObserver(function (mutations) {
-
+        // console.log("oui");
         let stop = false;
         let already = false;
         mutations.forEach(function (mutation) {
+            console.log(1);
             if (mutation.target.id.slice(0, 14) == 'up-truncation-') {
                 stop = true; 
-                console.log("fnid review")
+                // console.log("fnid review")
                 if (!already) {
                     console.log("not alreaadu")
                     findReviews();
@@ -144,6 +210,7 @@ function getall()
         if (stop) {
             observer.disconnect();
         }
+        // console.log("fin");
     });
     observer.observe(document, {
         subtree: true, 
@@ -154,7 +221,6 @@ function getall()
 function findNames(text) {
     let strArray = text.split(" ");
     let nameFind = false;
-    let name = "";
     let potentialNames = {};
     // console.log(strArray);
     strArray.forEach(searchNames);
@@ -194,7 +260,10 @@ function findNames(text) {
         storeName(name);
     }
 }
-
+function tryAgainWithNewPort() {
+            console.log("content store");
+            port.postMessage({message : "showBadge"});
+}
 function storeName(name) {
     // console.log("getting id .. " + name);
     let beautifulName = name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -207,19 +276,28 @@ function storeName(name) {
     let jobId = {};
     jobId[jobIdExtracted] = beautifulName;
     // console.log(jobId);
-    try {
 
     
     chrome.storage.local.set(jobId, function() {
-        // console.log('store content load at true');
+        console.log('store content load at true');
+        try {
+            port.postMessage({message : "showBadge"});
+        } catch (e) {
+            console.log(e);
+            portCreation();
+            tryAgainWithNewPort();
+
+
+        }
     });
+
+
 
     // console.log(" stored  enndd");
 
-    } catch (e) {
-        // console.log(e);
-    }
 }
+
+// const inte = setInterval(function () {console.log(port)}, 1000);
 
 function fillHiName(jobID) {
     let name = "";
@@ -506,14 +584,14 @@ function findCurrentTextareaContent() {
     let indHi = currentContent.indexOf("Hi !");
     let indNoSign = currentContent.indexOf('No signature defined :(');
 
-    console.log(indHi, indNoSign);
+    // console.log(indHi, indNoSign);
     if (indHi != -1){
         currentContent = currentContent.replace("Hi !", '');
     }
     if (indNoSign = -1) {
         currentContent = currentContent.replace("No signature defined :(", "");
     }
-    console.log(currentContent)
+    // console.log(currentContent)
     return currentContent;
 }
 
@@ -156039,6 +156117,7 @@ array = [
     "Shaben",
     "Shaber",
     "Shabi",
+    "Shabir",
     "Shabina",
     "Shabnam",
     "Shabnaz",
