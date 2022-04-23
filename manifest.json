@@ -7,17 +7,11 @@
       "js": ["content.js"]
     }
   ],
-  "description": "Build an Extension!",
+  "description": "",
   "version": "1.0",
   "manifest_version": 3,
-  "permissions": [
-    "webRequest",
-    "storage", 
-    "webNavigation"
-  ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "permissions": ["storage"],
+  "host_permissions": ["*://www.upwork.com/*"],
 
   "content_security_policy": {
     "extension_pages":"script-src 'self'; object-src 'self'"

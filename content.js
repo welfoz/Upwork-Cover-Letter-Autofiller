@@ -1,59 +1,27 @@
-// let port;
 let port = chrome.runtime.connect({name: "from cs"});
-    // console.log(port);
-    // console.log(port);
-    // console.log(port);
-    // console.log(port);
-    // console.log(port);
-    // console.log(port + Date.now());
+// console.log(port + Date.now());
 // port.onDisconnect.addListener(function (event) {
 //     // met 5 mn à se deco tout seul 
 //     console.log('port disconneted' + date.now());
-//     console.log(event);
+//     /console.log(event);
 // });
 function portCreation() {
     port = chrome.runtime.connect({name: "from cs"});
-    console.log(port);
-    // console.log(port + Date.now());
-//     port.ondisconnect.addlistener(function(event) {
-    // met 5 mn à se deco tout seul 
-//     console.log('port disconneted' + date.now());
-//     console.log(event);
-// });
+    // console.log(port);
 }
 
-// window.addEventListener('load', function (event) {
-// 	// Log the state data to the console
-// 	console.log(event);
-// });
-// window.addEventListener('popstate', function (event) {
-// 	// Log the state data to the console
-// 	console.log(event);
-// });
-
-// window.addEventListener('hashchange', function() {
-//   console.log('The hash has changed!')
-// }, false);
-
-// }
-// console.log(port);
-
 // when we directly load the job url type of https://www.upwork.com/jobs/~014bbfdb67beb1b160
-// console.log("load");
-
-let url = document.location.href;
-let indexProposal = url.indexOf("proposals");
+const url = document.location.href;
+const indexProposal = url.indexOf("proposals");
 if (indexProposal != -1) {
-    let urlJobId = url.slice(url.indexOf("job/~") + 4, url.indexOf("/apply"));
-    // console.log("We have the name !");
+    const urlJobId = url.slice(url.indexOf("job/~") + 4, url.indexOf("/apply"));
     fillHiName(urlJobId);
 
 } else {
     // we are in the "open job in the new window" page
-    let indexJob = url.indexOf("job"); // job to be sure we aren't on the submit proposal page 
-    // console.log(url, indexJob);
+    const indexJob = url.indexOf("job"); // job to be sure we aren't on the submit proposal page 
     if (url.slice(indexJob , indexJob + 6) == "jobs/~") {
-        console.log("case of job url directly loaded");
+        // console.log("case of job url directly loaded");
         getall();
     }
 }
@@ -64,7 +32,7 @@ if (indexProposal != -1) {
 let lastUrl = location.href; 
 new MutationObserver(() => {
   const url = location.href;
-  console.log(url, lastUrl);
+//   console.log(url, lastUrl);
   if (url !== lastUrl) {
     lastUrl = url;
     if (url.length > 40) {
@@ -75,29 +43,9 @@ new MutationObserver(() => {
  
  
 function onUrlChange() {
-        console.log("getall launch because mutation animation fired");
-
+        // console.log("getall launch because mutation animation fired");
         getall();
 }
-// document.addEventListener("animationend", (event) => {
-//     // console.log(event);
-//     // console.log(event.target.className);
-//     // console.log(Date.now() - lastAnimationEvent);
-//     if ((lastJobPath != document.location.pathname)&& (document.location.pathname.length > 17) && (event.target.className == "up-slider")) {
-//  // 300 milliseconds between the events 
-//         // console.log(event.srcElement.className);
-//         // console.log(document.location.href);
-//         // console.log(document.location.pathname);
-//         lastJobPath = document.location.pathname;
-//         console.log("getall launch because event animation fired");
-
-//         getall();
-
-//     } else {
-//         // console.log("we move back");
-//     }
-// });
-
 function sleep(ms) {
 return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -115,93 +63,39 @@ async function findReviews() {
     while (((stringnumberofreviews.length > 0) && (loopcompteur < 10)) || (loopcompteur == 0)) 
     {
         // loopcompteur == 0 if there is less than ~ 10 reviews 
-        // let numberofreviews = parseInt(stringnumberofreviews.replace(/\(|\s|\)/g, ''));// regex to have only the number ex : "( 42 )" => "42"
-        // console.log(numberofreviews);
-        // console.log(document.querySelector(".js-show-more"));
         document.querySelector(".js-show-more") ? document.querySelector(".js-show-more").click() : null; // we simulate a click to show more reviews 
 
         await sleep(1);
-        // console.log('sleep' + Date.now());
-        
-
-        
         
         const resulttotal = document.querySelectorAll("[id^=up-truncation]");
-        // console.log(resulttotal);
-        // console.log("last review : " + lastreviewlooked);
         for (let i = lastreviewlooked; i < resulttotal.length; i++) {
-            // console.log(i);
-            let number = resulttotal[i];
-            let beginindex = number.id.lastIndexOf('-') + 1;
-            let numbertruncation = number.id.substring(beginindex);
-            // youhou on l'a !!!!
-
-
+            const number = resulttotal[i];
+            const beginindex = number.id.lastIndexOf('-') + 1;
+            const numbertruncation = number.id.substring(beginindex);
             // test if review belongs to the freelancer
-                const tofreelance = document.evaluate(`//*[@id="up-truncation-${numbertruncation}"]/../../../../../..//text()`, document, null, XPathResult.STRING_TYPE, null );
-                // console.log(tofreelance.stringvalue);   
-                if (tofreelance.stringValue.includes("reelancer") == false) {
+            const tofreelance = document.evaluate(`//*[@id="up-truncation-${numbertruncation}"]/../../../../../..//text()`, document, null, XPathResult.STRING_TYPE, null );
+            if (tofreelance.stringValue.includes("reelancer") == false) {
                     totalreview += resulttotal[i].innerText.replaceAll(/\.|,|\!|\;|\:|\-/g, "").replaceAll("\n", " ") + " ";
-                    // console.log(resulttotal[i].innerText);
-
-                    // console.log(totalreview);
             }
             lastreviewlooked += 1;
-
         }
         stringnumberofreviews =  document.evaluate('//*[@class="js-show-more"]/../text()',  document, null, XPathResult.STRING_TYPE, null ).stringValue;
         loopcompteur++;
-        // console.log(stringnumberofreviews.length);
     }
-
-        
-
-
-        // console.log(totalreview);
-        // console.log(Date.now());
-        console.log(totalreview);
         findNames(totalreview);
 }
 
 function getall() 
 {
-    // WE NEED THIS COMPTEUR BECAUSE the result takes time to arrive as it refers to injected html by js
-    // let compteurInterval = 0; // stop setInterval after 5 seconds => 10 iterations
-    // const getReviewInterval = setInterval(getReview, 500);
-    
-    // function clearint () {
-    //     clearInterval(getReviewInterval);
-    // }
-    // function getReview () 
-    // {
-    //     // console.log("int");
-    //     let result = document.querySelectorAll("[id^=up-truncation]");
-    //     // console.log(result);
-
-
-    //     if ((result.length > 0) || (compteurInterval > 10)) {
-    //         // console.log("int cleared !");
-    //         // clearInterval(getReviewInterval);
-        
-    //         clearint();
-            
-    //         if (compteurInterval <= 10) {
-    //             findReviews();
-    //         }
-    //     }
-    //     compteurInterval++;
-    // }
     const observer = new MutationObserver(function (mutations) {
-        // console.log("oui");
         let stop = false;
         let already = false;
         mutations.forEach(function (mutation) {
-            console.log(1);
+            // console.log(1);
             if (mutation.target.id.slice(0, 14) == 'up-truncation-') {
                 stop = true; 
-                // console.log("fnid review")
                 if (!already) {
-                    console.log("not alreaadu")
+                    // console.log("not alreaadu")
                     findReviews();
                     already = true;
                 }
@@ -210,7 +104,6 @@ function getall()
         if (stop) {
             observer.disconnect();
         }
-        // console.log("fin");
     });
     observer.observe(document, {
         subtree: true, 
@@ -219,36 +112,29 @@ function getall()
 }
 
 function findNames(text) {
-    let strArray = text.split(" ");
+    const strArray = text.split(" ");
     let nameFind = false;
     let potentialNames = {};
-    // console.log(strArray);
     strArray.forEach(searchNames);
     function searchNames(value, index, ary) {
         if ((array.indexOf(value)) != -1) {
-            // console.log(value);
             nameFind = true;
             if (potentialNames[value] == null) {
                 potentialNames[value] = 1;
             } else {
                 potentialNames[value] += 1;
             };
-            // name = value;
         }
     }
-    // console.log(nameFind); 
     // if the name is told less than 2 times
     // => there is big chance that it isn t a name but just a mistake | a word which isn t in our list 
     if (nameFind) { //&& (cpt > 1)) {
         // find the world that occur the most often in the list to maximize our chances to find the real name  
         let name = "";
-    
-        let keys = Object.keys(potentialNames);
-
+        const keys = Object.keys(potentialNames);
         let max = 0;
         for(let i = 0; i < keys.length; i++) {
-            let key = keys[i];
-            // console.log(key + " = " + potentialNames[key]);
+            const key = keys[i];
             if (name != key) {
                 if (max <= potentialNames[key]) {
                     name = key;
@@ -256,82 +142,59 @@ function findNames(text) {
                 } 
             } 
         }
-        console.log(max, name);
         storeName(name);
     }
 }
 function tryAgainWithNewPort() {
-            console.log("content store");
+            // console.log("content store");
             port.postMessage({message : "showBadge"});
 }
 function storeName(name) {
-    // console.log("getting id .. " + name);
-    let beautifulName = name.substring(0, 1).toUpperCase() + name.substring(1);
-    // let res = document.getElementById("result");
-    // res.innerText = beautifulName;
-    // let res = chrome.storage.local.get("urlll");
-    let job_id = document.location.pathname;
-    // console.log(job_id);
-    let jobIdExtracted = job_id.slice(job_id.indexOf("~"));
+    const beautifulName = name.substring(0, 1).toUpperCase() + name.substring(1);
+    const job_id = document.location.pathname;
+    const jobIdExtracted = job_id.slice(job_id.indexOf("~"));
     let jobId = {};
     jobId[jobIdExtracted] = beautifulName;
-    // console.log(jobId);
 
     
     chrome.storage.local.set(jobId, function() {
-        console.log('store content load at true');
+        // console.log('store content load at true');
         try {
             port.postMessage({message : "showBadge"});
         } catch (e) {
-            console.log(e);
+            // console.log(e);
             portCreation();
             tryAgainWithNewPort();
-
-
         }
     });
-
-
-
-    // console.log(" stored  enndd");
-
 }
 
-// const inte = setInterval(function () {console.log(port)}, 1000);
 
 function fillHiName(jobID) {
     let name = "";
     function getName() {
         return new Promise((resolve, reject) => {
-
-        // console.log('get name ' + cptTry);
         chrome.storage.local.get(jobID, function(result){ // callback => asynchrone 
             // .get => attente + execution de la suite du block 
             // that's why t es obligé de mettre un settimeout => car la suite du code est executé 
             // avec la version asynchrone => la suite du code n est executé que quand recoit une reponse 
             // pour permettre d attendre un temps maximal (timeout => race avec un timeout à l'intérieur)
-            // console.log(result);
-            
             if (Object.values(result).length > 0) {
-                // console.log("we have it in stock !");
                 name = "Hi " + Object.values(result)[0] + "!";
                 resolve(name);
-                // console.log("int cleared !");
             } else {
                 name = "Hi !";
                 resolve(name);
             }
-            console.log(name);
+            // console.log(name);
         });
     });
     }
-
-    
     let signatureFind = "";
     function getSign() {
         return new Promise((resolve, reject) => {
             chrome.storage.local.get("signature", function(sign) { 
-                console.log(sign.signature);
+                // console.log(sign.signature);
                 if (sign.signature != null) {
                     resolve(sign.signature);
                     signatureFind = sign.signature;
@@ -342,98 +205,70 @@ function fillHiName(jobID) {
         });
     }
     
-    let cptTryTextarea = 0; // will compt the number of times we try to get storage
     let textArea = null;
     function getTextarea() {
         return new Promise((resolve, reject) => {
-            // const getTextareaInterval = setInterval(getText, 500);
             function getText() {
-                console.log('get textarea ' + cptTryTextarea);
-                let textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
+                // console.log('get textarea ' + cptTryTextarea);
+                const textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
                 if (textAreaTest != null) {
                     textArea = textAreaTest;
-                    // clearInterval(getTextareaInterval);
-                    // console.log("sign find !" + textArea);
-                        textArea.value =  name + '\n\n'+ signatureFind;
-                        // console.log(textArea.value);
-                    let container =  document.querySelector("[id='cover_letter_label']");
-                    let toInsert = document.createElement("input");
+                    textArea.value =  name + '\n\n'+ signatureFind;
+                    const container =  document.querySelector("[id='cover_letter_label']");
+                    const toInsert = document.createElement("input");
                     toInsert.setAttribute('type', 'submit');
                     toInsert.setAttribute('class', 'button-74');
                     toInsert.setAttribute('value', 'Refresh');
-
-
-                    // console.log(toInsert);
-                    // console.log(container);
                     container.appendChild(toInsert);
                     listenRefresh(toInsert, jobID);
                     resolve('textarea find');
-
                 } else {
                     resolve("textarea not find");
                 }
-            //     if (cptTryTextarea > 30) {
-            //         clearInterval(getTextareaInterval);
-            //         resolve("textarea not find");
-            //         console.log('int name cleared too many trying');
-            //     }
-            // cptTryTextarea++;
             }
-     
-
-        // observer to know when the textarea is ready 
-    const observer = new MutationObserver(function (mutations) {
-        // console.log(mutations);
-        let stop = false;
-        let already = false;
-        mutations.forEach(function (mutation) {
-            if (mutation.target.className.includes('up-loader-container')) {
-                stop = true;
-                if (!already) {
-                    console.log("gogo")
-                    getText();
-                    already = true;
+            const observer = new MutationObserver(function (mutations) {
+                let stop = false;
+                let already = false;
+                mutations.forEach(function (mutation) {
+                if (mutation.target.className.includes('up-loader-container')) {
+                    stop = true;
+                    if (!already) {
+                        // console.log("gogo")
+                        getText();
+                        already = true;
+                    }
                 }
-            }
-        });
-        if (stop) {
-            observer.disconnect()
-        }
-    }); 
-    observer.observe(document, {
-        subtree: true, 
-        childList : true
-    });
+                });
+                if (stop) {
+                    observer.disconnect()
+                }
+            }); 
+            observer.observe(document, {
+                subtree: true, 
+                childList : true
+            });
 
         });
     }  
     
     Promise.all([getName(), getSign(), getTextarea()]).then((messages) => {
-        console.log("promise finished");
-        console.log(messages);
+        // console.log("promise finished");
+        // console.log(messages);
         fill();
     })
     
     function fill() {
-        
-            // console.log("area defined");
-             console.log(textArea);
-             setTimeout(() => {
-                // settimeout because we cant instantly write in the textArea
-                textArea.value =  name + "\n\n"+ signatureFind;
-                console.log(textArea.value);
-             }, 2500);
-            // console.log("int cleared !");
-            
+        // console.log(textArea);
+        setTimeout(() => {
+            // settimeout because we cant instantly write in the textArea
+            textArea.value =  name + "\n\n"+ signatureFind;
+            // console.log(textArea.value);
+        }, 2500);
     }
-        
-            
-
 }
 
 function listenRefresh(toListen, jobID) {
     toListen.addEventListener("click", event => {
-            // console.log(event);
             refreshDOM(jobID);
     })
 }
@@ -444,25 +279,15 @@ function refreshDOM(jobID) {
     let name = "";
     function getName() {
         return new Promise((resolve, reject) => {
-
-        // console.log('get name ' + cptTry);
         chrome.storage.local.get(jobID, function(result){ // callback => asynchrone 
-            // .get => attente + execution de la suite du block 
-            // that's why t es obligé de mettre un settimeout => car la suite du code est executé 
-            // avec la version asynchrone => la suite du code n est executé que quand recoit une reponse 
-            // pour permettre d attendre un temps maximal (timeout => race avec un timeout à l'intérieur)
-            // console.log(result);
-            
             if (Object.values(result).length > 0) {
-                // console.log("we have it in stock !");
                 name = "Hi " + Object.values(result)[0] + "!";
                 resolve(name);
-                // console.log("int cleared !");
             } else {
                 name = "Hi !";
                 resolve(name);
             }
-            console.log(name);
+            // console.log(name);
         });
     });
     }
@@ -472,7 +297,7 @@ function refreshDOM(jobID) {
     function getSign() {
         return new Promise((resolve, reject) => {
             chrome.storage.local.get("signature", function(sign) { 
-                console.log(sign.signature);
+                // console.log(sign.signature);
                 if (sign.signature != null) {
                     resolve(sign.signature);
                     signatureFind = sign.signature;
@@ -483,115 +308,44 @@ function refreshDOM(jobID) {
         });
     }
     
-    let cptTryTextarea = 0; // will compt the number of times we try to get storage
     let textArea = null;
     function getTextarea() {
         return new Promise((resolve, reject) => {
-            // const getTextareaInterval = setInterval(getText, 500);
             function getText() {
-                console.log('get textarea ' + cptTryTextarea);
-                let textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
+                // console.log('get textarea ' + cptTryTextarea);
+                const textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
                 if (textAreaTest != null) {
                     textArea = textAreaTest;
-                    // clearInterval(getTextareaInterval);
-                        textArea.value =  name + '\n\n'+ signatureFind;
+                    textArea.value =  name + '\n\n'+ signatureFind;
                     resolve('textarea find');
-
                 } else {
                     resolve("textarea not find");
                 }
-            //     if (cptTryTextarea > 30) {
-            //         clearInterval(getTextareaInterval);
-            //         resolve("textarea not find");
-            //         // console.log('int name cleared too many trying');
-            //     }
-            // cptTryTextarea++;
             }
-     
             getText();
             }); 
-
-
     }  
     
     Promise.all([getName(), getSign(), getTextarea()]).then((messages) => {
-        console.log("promise finished");
-        console.log(messages);
+        // // console.log("promise finished");
+        // console.log(messages);
         fill();
     })
-
-    // console.log(currentContent);
-
-
-    // getName();
-    // let name = "";
-    // function getName() {
-    //     // console.log('get name ' + cptTry);
-    //     chrome.storage.local.get(jobID, function(result){
-    //         // console.log(result);
-            
-    //         if (Object.values(result).length > 0) {
-    //             // console.log("we have it in stock !");
-    //             name = "Hi " + Object.values(result)[0] + "!";
-    //             // console.log("int cleared !");
-    //         } else {
-    //             name = 'Hi !'
-    //         }
-    //     });
-    // }
-    
-    // let signatureFind = "No signature defined :(";
-    // getSign();
-    // function getSign() {
-    //     chrome.storage.local.get("signature", function(sign) {
-    //         if (sign.signature != null) {
-    //             signatureFind = sign.signature;
-    //             // console.log("sign find !" + signatureFind);
-    //         }
-    //     });
-    // }
-    
-
-    // let textArea = null;
-    // getTextarea();
-    // function getTextarea() {
-    //     let textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
-    //         if (textAreaTest != null) {
-    //             textArea = textAreaTest;
-    //             // console.log("sign find !" + textArea);
-    //         }
-    // }  
-    
-    
-    // setTimeout(fill, 500);
-
     function fill() {
-        
         if (textArea != null) {
-            // console.log("area defined");
-            console.log("on fill le refresh")
-
+            // console.log("on fill le refresh")
             textArea.value =  name + "\n\n"+ currentContent + '\n' +  signatureFind;
-            // console.log("int cleared !");
         }
     }
 
 }
 
 function findCurrentTextareaContent() {
-    let currentContent = document.querySelector('[aria-labelledby=cover_letter_label]').value;
-    // console.log(currentContent);
-    let indHi = currentContent.indexOf("Hi !");
-    let indNoSign = currentContent.indexOf('No signature defined :(');
-
-    // console.log(indHi, indNoSign);
+    const currentContent = document.querySelector('[aria-labelledby=cover_letter_label]').value;
+    const indHi = currentContent.indexOf("Hi !");
     if (indHi != -1){
         currentContent = currentContent.replace("Hi !", '');
     }
-    if (indNoSign = -1) {
-        currentContent = currentContent.replace("No signature defined :(", "");
-    }
-    // console.log(currentContent)
     return currentContent;
 }
 
