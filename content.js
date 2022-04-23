@@ -204,7 +204,20 @@ function fillHiName(jobID) {
             });
         });
     }
-    
+   let templateFind = "";
+    function getTemp() {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get("template", function(sign) { 
+                // console.log(sign.template);
+                if (sign.template != null) {
+                    resolve(sign.template);
+                    templateFind = sign.template;
+                } else {
+                    resolve("none template");
+                }
+            });
+        });
+    } 
     let textArea = null;
     function getTextarea() {
         return new Promise((resolve, reject) => {
@@ -213,7 +226,9 @@ function fillHiName(jobID) {
                 const textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
                 if (textAreaTest != null) {
                     textArea = textAreaTest;
-                    textArea.value =  name + '\n\n'+ signatureFind;
+                    // textArea.value =  name + '\n\n'+ signatureFind;
+
+                    // textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
                     const container =  document.querySelector("[id='cover_letter_label']");
                     const toInsert = document.createElement("input");
                     toInsert.setAttribute('type', 'submit');
@@ -251,7 +266,7 @@ function fillHiName(jobID) {
         });
     }  
     
-    Promise.all([getName(), getSign(), getTextarea()]).then((messages) => {
+    Promise.all([getName(), getSign(), getTextarea(), getTemp()]).then((messages) => {
         // console.log("promise finished");
         // console.log(messages);
         fill();
@@ -261,7 +276,8 @@ function fillHiName(jobID) {
         // console.log(textArea);
         setTimeout(() => {
             // settimeout because we cant instantly write in the textArea
-            textArea.value =  name + "\n\n"+ signatureFind;
+            // textArea.value =  name + "\n\n"+ signatureFind;
+            textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
             // console.log(textArea.value);
         }, 2500);
     }
@@ -307,6 +323,20 @@ function refreshDOM(jobID) {
             });
         });
     }
+    let templateFind = "";
+    function getTemp() {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get("template", function(sign) { 
+                // console.log(sign.template);
+                if (sign.template != null) {
+                    resolve(sign.template);
+                    templateFind = sign.template;
+                } else {
+                    resolve("none template");
+                }
+            });
+        });
+    }
     
     let textArea = null;
     function getTextarea() {
@@ -316,7 +346,9 @@ function refreshDOM(jobID) {
                 const textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
                 if (textAreaTest != null) {
                     textArea = textAreaTest;
-                    textArea.value =  name + '\n\n'+ signatureFind;
+                    // textArea.value =  name + '\n\n'+ signatureFind;
+
+                    textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
                     resolve('textarea find');
                 } else {
                     resolve("textarea not find");
@@ -326,7 +358,7 @@ function refreshDOM(jobID) {
             }); 
     }  
     
-    Promise.all([getName(), getSign(), getTextarea()]).then((messages) => {
+    Promise.all([getName(), getSign(), getTextarea(), getTemp()]).then((messages) => {
         // // console.log("promise finished");
         // console.log(messages);
         fill();
@@ -334,14 +366,14 @@ function refreshDOM(jobID) {
     function fill() {
         if (textArea != null) {
             // console.log("on fill le refresh")
-            textArea.value =  name + "\n\n"+ currentContent + '\n' +  signatureFind;
+            textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
         }
     }
 
 }
 
 function findCurrentTextareaContent() {
-    const currentContent = document.querySelector('[aria-labelledby=cover_letter_label]').value;
+    let currentContent = document.querySelector('[aria-labelledby=cover_letter_label]').value;
     const indHi = currentContent.indexOf("Hi !");
     if (indHi != -1){
         currentContent = currentContent.replace("Hi !", '');
