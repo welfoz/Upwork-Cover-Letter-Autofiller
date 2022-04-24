@@ -156,17 +156,20 @@ function storeName(name) {
     let jobId = {};
     jobId[jobIdExtracted] = beautifulName;
 
-    
-    chrome.storage.local.set(jobId, function() {
-        // console.log('store content load at true');
-        try {
-            port.postMessage({message : "showBadge"});
-        } catch (e) {
-            // console.log(e);
-            portCreation();
-            tryAgainWithNewPort();
-        }
-    });
+    try {
+        chrome.storage.local.set(jobId, function() {
+            // console.log('store content load at true');
+            try {
+                port.postMessage({message : "showBadge"});
+            } catch (e) {
+                // console.log(e);
+                portCreation();
+                tryAgainWithNewPort();
+            }
+        });
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 

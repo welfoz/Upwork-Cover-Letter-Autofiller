@@ -6,7 +6,7 @@ chrome.runtime.onConnect.addListener(function(port) {
         port.onMessage.addListener(function(msg) {
             if (msg.message == 'showBadge') {
                 chrome.action.setBadgeText({ text: 'find' });
-                setTimeout(function () {chrome.action.setBadgeText({text : ''})}, 5000);
+                setTimeout(function () {chrome.action.setBadgeText({text : ''})}, 9000);
                 setTimeout(function () {port.disconnect()}, 4000);
             }
         })

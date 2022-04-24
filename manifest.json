@@ -1,5 +1,5 @@
 {
-  "name": "Improve your Job Proposals (Upwork)",
+  "name": "Upwork Cover Letter Autofiller",
   "content_scripts": [
     {
       "run_at": "document_idle",
@@ -29,7 +29,7 @@
     }
   ], 
   "icons" : {
-    "48" : "I16.png"
+    "48" : "icon16.png"
   }
 
 }
