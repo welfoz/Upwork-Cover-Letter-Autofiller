@@ -1,9 +1,9 @@
 {
-  "name": "Upwork Cover Letter Autofiller",
+  "name": "Cheat",
   "content_scripts": [
     {
       "run_at": "document_idle",
-      "matches": ["*://www.upwork.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
   ],
@@ -11,7 +11,7 @@
   "version": "1.0",
   "manifest_version": 3,
   "permissions": ["storage"],
-  "host_permissions": ["*://www.upwork.com/*"],
+  "host_permissions": ["<all_urls>"],
 
   "content_security_policy": {
     "extension_pages":"script-src 'self'; object-src 'self'"
@@ -22,12 +22,6 @@
   "background": {
     "service_worker": "background.js"
   },
-  "web_accessible_resources": [
-    {
-      "resources" :  ["popup.js"],
-      "matches" : [ "<all_urls>" ]
-    }
-  ], 
   "icons" : {
     "48" : "icon16.png"
   }
