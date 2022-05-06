@@ -30,16 +30,19 @@ if (indexProposal != -1) {
 // it is effective => when the url change, we know it fast
 // BUT it fires many many times 
 let lastUrl = location.href; 
-new MutationObserver(() => {
+new MutationObserver((mut) => {
   const url = location.href;
+    console.log(mut);
+    console.count(url);
 //   console.log(url, lastUrl);
   if (url !== lastUrl) {
+      console.log("fire");
     lastUrl = url;
     if (url.length > 40) {
         onUrlChange();
   }
   }
-}).observe(document, {subtree: true, childList: true});
+}).observe(document, {subtree: true, attributes: true});
  
  
 function onUrlChange() {
