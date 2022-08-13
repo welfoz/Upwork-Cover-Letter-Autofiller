@@ -1,5 +1,7 @@
 {
   "name": "Upwork Cover Letter Autofiller",
+  "version": "1.1",
+  "manifest_version": 3,
   "content_scripts": [
     {
       "run_at": "document_idle",
@@ -7,12 +9,9 @@
       "js": ["content.js"]
     }
   ],
-  "description": "",
-  "version": "1.0",
-  "manifest_version": 3,
+  "description": "Autofill the Upwork Cover Letter. For Freelancers. Save Time. Increase your response rate by automatically saying the client name. Define cover letter templates.",
   "permissions": ["storage"],
   "host_permissions": ["*://www.upwork.com/*"],
-
   "content_security_policy": {
     "extension_pages":"script-src 'self'; object-src 'self'"
   },
@@ -29,7 +28,8 @@
     }
   ], 
   "icons" : {
-    "48" : "icon16.png"
+    "16" : "icon16.png",
+    "48" : "icon48.png",
+    "124" : "icon128.png"
   }
-
 }

@@ -13,7 +13,7 @@
     font-family: 'Roboto', sans-serif;
 }
 .header {
-    font-size: 20px;
+    font-size: 23px;
     font-weight: 600;
     text-align: center;
     margin-top : 10px;
@@ -184,13 +184,28 @@ html {
 }
 .menu {
     width: 300px;
-    text-align: center;
+    margin-bottom: 40px;
     margin-right: auto;
     margin-left: auto;
-    margin-bottom: 20px;
 }
 
-
+.request {
+    width: 80px;
+    height:35px;
+    background: white;
+    padding: 5px;
+    border: 2px solid #422800;
+    border-radius: 20px 0 0 20px;
+    margin-right:-10px;
+    box-shadow: #422800 4px 4px 0 0;
+    font-weight: 600;
+    text-decoration: none;
+    font-size:14px;
+    text-align: center;
+    line-height:1.4;
+    padding-bottom: 7px;
+    margin-top: 6px;
+}
 /**
 
  Modern Browsers 
