@@ -6141,4 +6141,8 @@ bmac.addEventListener("click", () => {
     mixpanel.track("Buy me a Coffee Clicked");
 })
 
+let contactEmail = document.getElementById("contact");
+contactEmail.addEventListener("click", () => {
+    mixpanel.track("Contact Email Clicked");
+})
 },{"mixpanel-browser":1}]},{},[2]);

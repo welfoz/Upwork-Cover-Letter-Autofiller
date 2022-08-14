@@ -159,3 +159,8 @@ let bmac = document.getElementById("bmac");
 bmac.addEventListener("click", () => {
     mixpanel.track("Buy me a Coffee Clicked");
 })
+
+let contactEmail = document.getElementById("contact");
+contactEmail.addEventListener("click", () => {
+    mixpanel.track("Contact Email Clicked");
+})
