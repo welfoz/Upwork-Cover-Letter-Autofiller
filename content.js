@@ -1,13 +1,11 @@
+// mixpanel
+const mixpanel = require('mixpanel-browser');
+mixpanel.init('79819961683bf241161266d16a1aca31', {debug: true}); 
+mixpanel.track("content loaded");
+
 let port = chrome.runtime.connect({name: "from cs"});
-// console.log(port + Date.now());
-// port.onDisconnect.addListener(function (event) {
-//     // met 5 mn à se deco tout seul 
-//     console.log('port disconneted' + date.now());
-//     /console.log(event);
-// });
 function portCreation() {
     port = chrome.runtime.connect({name: "from cs"});
-    // console.log(port);
 }
 
 // when we directly load the job url type of https://www.upwork.com/jobs/~014bbfdb67beb1b160
@@ -16,7 +14,6 @@ const indexProposal = url.indexOf("proposals");
 if (indexProposal != -1) {
     const urlJobId = url.slice(url.indexOf("job/~") + 4, url.indexOf("/apply"));
     fillHiName(urlJobId);
-
 } else {
     // we are in the "open job in the new window" page
     const indexJob = url.indexOf("job"); // job to be sure we aren't on the submit proposal page 
@@ -32,7 +29,6 @@ if (indexProposal != -1) {
 let lastUrl = location.href; 
 new MutationObserver(() => {
   const url = location.href;
-//   console.log(url, lastUrl);
   if (url !== lastUrl) {
     lastUrl = url;
     if (url.length > 40) {
@@ -41,13 +37,12 @@ new MutationObserver(() => {
   }
 }).observe(document, {subtree: true, childList: true});
  
- 
 function onUrlChange() {
-        // console.log("getall launch because mutation animation fired");
         getall();
 }
+
 function sleep(ms) {
-return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function findReviews() {
@@ -189,7 +184,6 @@ function fillHiName(jobID) {
                 name = "Hi !";
                 resolve(name);
             }
-            // console.log(name);
         });
     });
     }
@@ -270,31 +264,30 @@ function fillHiName(jobID) {
     }  
     
     Promise.all([getName(), getSign(), getTextarea(), getTemp()]).then((messages) => {
-        // console.log("promise finished");
-        // console.log(messages);
         fill();
     })
     
     function fill() {
-        // console.log(textArea);
         setTimeout(() => {
             // settimeout because we cant instantly write in the textArea
             // textArea.value =  name + "\n\n"+ signatureFind;
             textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
-            // console.log(textArea.value);
+            mixpanel.track("Cover Letter Autofilled", {
+                "name": `${name}`,
+                "template": `${templateFind}`,
+                "signature": `${signatureFind}`
+            })
         }, 2500);
     }
 }
 
 function listenRefresh(toListen, jobID) {
     toListen.addEventListener("click", event => {
-            refreshDOM(jobID);
+        refreshDOM(jobID);
     })
 }
 
 function refreshDOM(jobID) {
-
-    let currentContent = findCurrentTextareaContent();
     let name = "";
     function getName() {
         return new Promise((resolve, reject) => {
@@ -306,12 +299,10 @@ function refreshDOM(jobID) {
                 name = "Hi !";
                 resolve(name);
             }
-            // console.log(name);
         });
     });
     }
 
-    
     let signatureFind = "";
     function getSign() {
         return new Promise((resolve, reject) => {
@@ -330,7 +321,6 @@ function refreshDOM(jobID) {
     function getTemp() {
         return new Promise((resolve, reject) => {
             chrome.storage.local.get("template", function(sign) { 
-                // console.log(sign.template);
                 if (sign.template != null) {
                     resolve(sign.template);
                     templateFind = sign.template;
@@ -345,12 +335,9 @@ function refreshDOM(jobID) {
     function getTextarea() {
         return new Promise((resolve, reject) => {
             function getText() {
-                // console.log('get textarea ' + cptTryTextarea);
                 const textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
                 if (textAreaTest != null) {
                     textArea = textAreaTest;
-                    // textArea.value =  name + '\n\n'+ signatureFind;
-
                     textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
                     resolve('textarea find');
                 } else {
@@ -362,26 +349,19 @@ function refreshDOM(jobID) {
     }  
     
     Promise.all([getName(), getSign(), getTextarea(), getTemp()]).then((messages) => {
-        // // console.log("promise finished");
-        // console.log(messages);
         fill();
     })
     function fill() {
         if (textArea != null) {
-            // console.log("on fill le refresh")
             textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
+            mixpanel.track("Refreshed Cover Letter Autofilled", {
+                "name": `${name}`,
+                "template": `${templateFind}`,
+                "signature": `${signatureFind}`
+            })
         }
     }
 
-}
-
-function findCurrentTextareaContent() {
-    let currentContent = document.querySelector('[aria-labelledby=cover_letter_label]').value;
-    const indHi = currentContent.indexOf("Hi !");
-    if (indHi != -1){
-        currentContent = currentContent.replace("Hi !", '');
-    }
-    return currentContent;
 }
 
 array = [

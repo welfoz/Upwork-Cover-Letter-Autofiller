@@ -6,7 +6,7 @@
     {
       "run_at": "document_idle",
       "matches": ["*://www.upwork.com/*"],
-      "js": ["content.js"]
+      "js": ["contentbundle.js"]
     }
   ],
   "description": "Autofill Upwork Cover Letter. For Freelancers. Increase Response % by automatically saying the client name. Cover letter templates",
@@ -23,7 +23,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources" :  ["popup.js", "popupbundle.js"],
+      "resources" :  ["popupbundle.js"],
       "matches" : [ "<all_urls>" ]
     }
   ], 
