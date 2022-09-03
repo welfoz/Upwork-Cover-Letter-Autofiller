@@ -1,8 +1,11 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 // mixpanel
 const mixpanel = require('mixpanel-browser');
-mixpanel.init('79819961683bf241161266d16a1aca31', {debug: true}); 
+mixpanel.init('79819961683bf241161266d16a1aca31', {debug: false}); 
 mixpanel.track("content loaded");
+
+const basicTemplate = "[HERE IS A MESSAGE FROM THE UPWORK COVER LETTER WEB EXTENSION]\n\n Hi and thank you for using the extension. \n\nDo you know you can define a template for your upwork cover letter with the extension? \n\nTo do so, open the extension called 'Upwork Cover Letter Autofiller'. \nYou can find it on the top right of your browser in the web extension bar.\nIf you have any questions: extensionfabien@gmail.com";
+const basicSignature = "Looking forward to working with you.\n\nBest Regards";
 
 let port = chrome.runtime.connect({name: "from cs"});
 function portCreation() {
@@ -198,6 +201,7 @@ function fillHiName(jobID) {
                     signatureFind = sign.signature;
                 } else {
                     resolve("none sign");
+                    signatureFind = basicSignature;
                 }
             });
         });
@@ -212,6 +216,7 @@ function fillHiName(jobID) {
                     templateFind = sign.template;
                 } else {
                     resolve("none template");
+                    templateFind = basicTemplate;
                 }
             });
         });
@@ -314,6 +319,7 @@ function refreshDOM(jobID) {
                     signatureFind = sign.signature;
                 } else {
                     resolve("none sign");
+                    signatureFind = basicSignature;
                 }
             });
         });
@@ -327,6 +333,7 @@ function refreshDOM(jobID) {
                     templateFind = sign.template;
                 } else {
                     resolve("none template");
+                    templateFind = basicTemplate;
                 }
             });
         });

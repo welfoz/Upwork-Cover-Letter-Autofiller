@@ -5982,7 +5982,7 @@ module.exports = mixpanel;
 // mixpanel
 const mixpanel = require('mixpanel-browser');
 
-mixpanel.init('79819961683bf241161266d16a1aca31', {debug: true}); 
+mixpanel.init('79819961683bf241161266d16a1aca31', {debug: false}); 
 mixpanel.track('Popup loaded');
 
 let btnSign = document.getElementById('signature');
@@ -5990,7 +5990,7 @@ chrome.storage.local.get({signature}, function(sign) {
     if (Object.keys(sign.signature).length != 0) {
         btnSign.innerText = sign.signature; 
     } else {
-        btnSign.innerHTML = "Looking forward to working with you. </div><div><br>Best Regards </div><div>My Beautiful Name</div>";
+        btnSign.innerHTML = "Looking forward to working with you. </div><div><br>Best Regards </div><div>[YOUR NAME HERE]</div>";
     }
 });
 
@@ -5999,7 +5999,7 @@ chrome.storage.local.get({template}, function(sign) {
     if (Object.keys(sign.template).length != 0) {
         btnTemp.innerText = sign.template; 
     } else {
-        btnTemp.innerHTML = "I just read your posting. It sounds like you need an expert in cold emails to advise you on everything from the content to the overall strategy. <div><br>I have a background in email marketing and have been doing this for 3 years. Cold emailing in B2B is what I specialize in.</div><div><br>I can work with you to write the content and subject lines, recommend the best technologies for you to use, and more. Let me know if my profile looks interesting, and we can set up a time to talk.</div>"
+        btnTemp.innerHTML = "[MESSAGE FROM THE UPWORK COVER LETTER AUTOFILLER WEB EXTENSION]<br><br>[Click on this text and delete it to write your own cover letter template, and then save it]<br><br>[The show button allow you to see your current template]<br>[On the menu, you can find the signature part to define your own signature]<br>[if you have any questions: extensionfabien@gmail.com]<br><br> I just read your posting. It sounds like you need an expert in cold emails to advise you on everything from the content to the overall strategy. <div><br>I have a background in email marketing and have been doing this for 3 years. Cold emailing in B2B is what I specialize in.</div><div><br>I can work with you to write the content and subject lines, recommend the best technologies for you to use, and more. Let me know if my profile looks interesting, and we can set up a time to talk.</div>"
     }
 });
 
