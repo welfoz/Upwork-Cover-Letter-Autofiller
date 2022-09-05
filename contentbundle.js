@@ -232,13 +232,6 @@ function fillHiName(jobID) {
                     // textArea.value =  name + '\n\n'+ signatureFind;
 
                     // textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
-                    const container =  document.querySelector("[id='cover_letter_label']");
-                    const toInsert = document.createElement("input");
-                    toInsert.setAttribute('type', 'submit');
-                    toInsert.setAttribute('class', 'button-74');
-                    toInsert.setAttribute('value', 'Refresh');
-                    container.appendChild(toInsert);
-                    listenRefresh(toInsert, jobID);
                     resolve('textarea find');
                 } else {
                     resolve("textarea not find");
@@ -285,91 +278,6 @@ function fillHiName(jobID) {
             })
         }, 2500);
     }
-}
-
-function listenRefresh(toListen, jobID) {
-    toListen.addEventListener("click", event => {
-        refreshDOM(jobID);
-    })
-}
-
-function refreshDOM(jobID) {
-    let name = "";
-    function getName() {
-        return new Promise((resolve, reject) => {
-        chrome.storage.local.get(jobID, function(result){ // callback => asynchrone 
-            if (Object.values(result).length > 0) {
-                name = "Hi " + Object.values(result)[0] + "!";
-                resolve(name);
-            } else {
-                name = "Hi !";
-                resolve(name);
-            }
-        });
-    });
-    }
-
-    let signatureFind = "";
-    function getSign() {
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.get("signature", function(sign) { 
-                // console.log(sign.signature);
-                if (sign.signature != null) {
-                    resolve(sign.signature);
-                    signatureFind = sign.signature;
-                } else {
-                    resolve("none sign");
-                    signatureFind = basicSignature;
-                }
-            });
-        });
-    }
-    let templateFind = "";
-    function getTemp() {
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.get("template", function(sign) { 
-                if (sign.template != null) {
-                    resolve(sign.template);
-                    templateFind = sign.template;
-                } else {
-                    resolve("none template");
-                    templateFind = basicTemplate;
-                }
-            });
-        });
-    }
-    
-    let textArea = null;
-    function getTextarea() {
-        return new Promise((resolve, reject) => {
-            function getText() {
-                const textAreaTest = document.querySelector('[aria-labelledby=cover_letter_label]');
-                if (textAreaTest != null) {
-                    textArea = textAreaTest;
-                    textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
-                    resolve('textarea find');
-                } else {
-                    resolve("textarea not find");
-                }
-            }
-            getText();
-            }); 
-    }  
-    
-    Promise.all([getName(), getSign(), getTextarea(), getTemp()]).then((messages) => {
-        fill();
-    })
-    function fill() {
-        if (textArea != null) {
-            textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
-            mixpanel.track("Refreshed Cover Letter Autofilled", {
-                "name": `${name}`,
-                "template": `${templateFind}`,
-                "signature": `${signatureFind}`
-            })
-        }
-    }
-
 }
 
 array = [
