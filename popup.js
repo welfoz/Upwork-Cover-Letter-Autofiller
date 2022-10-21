@@ -18,7 +18,7 @@ chrome.storage.local.get({template}, function(sign) {
     if (Object.keys(sign.template).length != 0) {
         btnTemp.innerText = sign.template; 
     } else {
-        btnTemp.innerHTML = "To learn how to define your cover letter template. \n\nCheck out the getting started video: https://www.youtube.com/watch?v=IQzjlVIDUsk&ab_channel=UpworkExtension"
+        btnTemp.innerHTML = "Write your cover letter template here!";
     }
 });
 
@@ -157,7 +157,6 @@ contactEmail.addEventListener("click", () => {
 })
 
 function currentTemplateUpdate() {
-        console.log('b');
         let getTemplate = "";
         let getSign = "";
         function tempPromise() {
@@ -200,5 +199,14 @@ function currentTemplateUpdate() {
                 })
         });
 }
-console.log('c');
 currentTemplateUpdate();
+
+let btnGettingStarted = document.getElementById("gettingStartedVideo");
+btnGettingStarted.addEventListener("click", function() {
+    mixpanel.track("popup_btnGettingStartedVideo_click");
+})
+
+let btnDiscord = document.getElementById("discordBtn");
+btnDiscord.addEventListener("click", function() {
+    mixpanel.track("popup_discordBtn_click");
+})

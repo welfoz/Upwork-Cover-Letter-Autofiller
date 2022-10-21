@@ -2,9 +2,8 @@
 // mixpanel
 const mixpanel = require('mixpanel-browser');
 mixpanel.init('79819961683bf241161266d16a1aca31', {debug: false}); 
-mixpanel.track("content loaded");
 
-const basicTemplate = "To learn how to define your cover letter template. \n\nCheck out the getting started video: https://www.youtube.com/watch?v=IQzjlVIDUsk&ab_channel=UpworkExtension";
+const basicTemplate = "";
 const basicSignature = "Looking forward to working with you.\n\nBest Regards";
 
 let port = chrome.runtime.connect({name: "from cs"});
@@ -206,7 +205,7 @@ function fillHiName(jobID) {
             });
         });
     }
-   let templateFind = "";
+    let templateFind = "";
     function getTemp() {
         return new Promise((resolve, reject) => {
             chrome.storage.local.get("template", function(sign) { 
@@ -262,12 +261,47 @@ function fillHiName(jobID) {
         });
     }  
     
+
     Promise.all([getName(), getSign(), getTextarea(), getTemp()]).then((messages) => {
         fill();
     })
     
     function fill() {
         setTimeout(() => {
+            const container =  document.querySelector("[id='cover_letter_label']");
+            const toInsert = document.createElement("input");
+            toInsert.setAttribute('type', 'submit');
+            toInsert.setAttribute('value', 'Get Started With Cover Letter Templates');
+            toInsert.setAttribute('id', 'getStartedBtn');
+            toInsert.setAttribute('style', 'background-color: white; border: 1px solid gray; border-radius: 5px; margin-left: 20px');
+            container.appendChild(toInsert);
+            
+            const root = document.querySelector("#main");
+            const ytbIframe = document.createElement("iframe");
+            ytbIframe.setAttribute("width", "860");
+            ytbIframe.setAttribute("height", "615");
+            ytbIframe.setAttribute("style", "display: none; position: fixed; top: calc(50% - 615px/2); left: calc(50% - 860px/2);");
+            ytbIframe.setAttribute("src", "https://www.youtube-nocookie.com/embed/IQzjlVIDUsk");
+            ytbIframe.setAttribute("title", "Youtube video player");
+            ytbIframe.setAttribute("frameborder", "0");
+            ytbIframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+            ytbIframe.setAttribute("allowfullscreen", "true");
+            ytbIframe.setAttribute("id", "ytbIframe");
+            root.appendChild(ytbIframe);
+            const closeYtbEmbed = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            closeYtbEmbed.setAttribute("width", "30");
+            closeYtbEmbed.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+            closeYtbEmbed.setAttribute("height", "30");
+            closeYtbEmbed.setAttribute("fill", "#000000");
+            closeYtbEmbed.setAttribute("viewBox", "0 0 30 30");
+            closeYtbEmbed.setAttribute("id", "closeYtbEmbed");
+            closeYtbEmbed.setAttribute("style", "display: none;position: fixed; top: calc(50% - 675px/2); left: calc(50% + 860px/2);");
+            
+            const closeSVGPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            closeSVGPath.setAttribute("d", "M 7 4 C 6.744125 4 6.4879687 4.0974687 6.2929688 4.2929688 L 4.2929688 6.2929688 C 3.9019687 6.6839688 3.9019687 7.3170313 4.2929688 7.7070312 L 11.585938 15 L 4.2929688 22.292969 C 3.9019687 22.683969 3.9019687 23.317031 4.2929688 23.707031 L 6.2929688 25.707031 C 6.6839688 26.098031 7.3170313 26.098031 7.7070312 25.707031 L 15 18.414062 L 22.292969 25.707031 C 22.682969 26.098031 23.317031 26.098031 23.707031 25.707031 L 25.707031 23.707031 C 26.098031 23.316031 26.098031 22.682969 25.707031 22.292969 L 18.414062 15 L 25.707031 7.7070312 C 26.098031 7.3170312 26.098031 6.6829688 25.707031 6.2929688 L 23.707031 4.2929688 C 23.316031 3.9019687 22.682969 3.9019687 22.292969 4.2929688 L 15 11.585938 L 7.7070312 4.2929688 C 7.5115312 4.0974687 7.255875 4 7 4 z");
+            closeYtbEmbed.appendChild(closeSVGPath);
+            root.appendChild(closeYtbEmbed);
+            listenCloseButton();
             // settimeout because we cant instantly write in the textArea
             // textArea.value =  name + "\n\n"+ signatureFind;
             textArea.value =  name + "\n\n"+ templateFind + '\n\n' +  signatureFind;
@@ -279,7 +313,21 @@ function fillHiName(jobID) {
         }, 2500);
     }
 }
-
+function listenCloseButton() {
+    let ytbEmbedIframe = document.getElementById("ytbIframe");
+    let btnCloseYtbEmbed = document.getElementById('closeYtbEmbed');
+    let btnGetStarted = document.getElementById('getStartedBtn');
+    btnCloseYtbEmbed.addEventListener('click', function() {
+            ytbEmbedIframe.style.display = "none";
+            btnCloseYtbEmbed.style.display = "none";
+            mixpanel.track("btnCloseYtb_click");
+    });
+    btnGetStarted.addEventListener('click', function() {
+            ytbEmbedIframe.style.display = "block";
+            btnCloseYtbEmbed.style.display = "block";
+            mixpanel.track("btnGetStartedYtb_click");
+    })
+}
 array = [
     "A'isha",
     "A-jay",
