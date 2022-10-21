@@ -280,7 +280,7 @@ function fillHiName(jobID) {
             ytbIframe.setAttribute("width", "860");
             ytbIframe.setAttribute("height", "615");
             ytbIframe.setAttribute("style", "display: none; position: fixed; top: calc(50% - 615px/2); left: calc(50% - 860px/2);");
-            ytbIframe.setAttribute("src", "https://www.youtube-nocookie.com/embed/IQzjlVIDUsk");
+            ytbIframe.setAttribute("src", "https://www.youtube-nocookie.com/embed/IQzjlVIDUsk?enablejsapi=1");
             ytbIframe.setAttribute("title", "Youtube video player");
             ytbIframe.setAttribute("frameborder", "0");
             ytbIframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
@@ -319,6 +319,7 @@ function listenCloseButton() {
     btnCloseYtbEmbed.addEventListener('click', function() {
             ytbEmbedIframe.style.display = "none";
             btnCloseYtbEmbed.style.display = "none";
+            ytbEmbedIframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
             mixpanel.track("btnCloseYtb_click");
     });
     btnGetStarted.addEventListener('click', function() {
