@@ -1,9 +1,11 @@
 .template {
 
+    margin-top:10px;
     display: block;
 }
 
 .signature {
+    margin-top:10px;
     display: none;
 }
 .container {
@@ -15,7 +17,6 @@
 .header {
     font-size: 23px;
     font-weight: 600;
-    text-align: center;
     margin-top : 10px;
     margin-bottom: 20px;
 }
@@ -86,6 +87,9 @@ html {
 
 .btnContainer {
     display: flex;
+    margin-left:auto;
+    margin-right:auto;
+    width:50%;
 }
 .result {
     background: white;
@@ -184,16 +188,16 @@ html {
 }
 .menu {
     width: 300px;
-    margin-bottom: 40px;
-    margin-right: auto;
-    margin-left: auto;
+    margin-top: 20px;
+    /* margin-right: auto; */
+    /* margin-left: auto; */
 }
 
 .request {
-    width: 80px;
-    height:35px;
+    /* width: 80px; */
+    /* height:35px; */
     background: white;
-    padding: 5px;
+    padding: 10px;
     border: 2px solid #422800;
     border-radius: 20px 0 0 20px;
     margin-right:-10px;
@@ -203,7 +207,7 @@ html {
     font-size:14px;
     text-align: center;
     line-height:1.4;
-    padding-bottom: 7px;
+    /* padding-bottom: 7px; */
     margin-top: 6px;
 }
 /**
