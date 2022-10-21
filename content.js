@@ -3,7 +3,7 @@ const mixpanel = require('mixpanel-browser');
 mixpanel.init('79819961683bf241161266d16a1aca31', {debug: false}); 
 mixpanel.track("content loaded");
 
-const basicTemplate = "[HERE IS A MESSAGE FROM THE UPWORK COVER LETTER WEB EXTENSION]\n\n Hi and thank you for using the extension. \n\nDo you know you can define a template for your upwork cover letter with the extension? \n\nTo do so, open the extension called 'Upwork Cover Letter Autofiller'. \nYou can find it on the top right of your browser in the web extension bar.\nIf you have any questions: extensionfabien@gmail.com";
+const basicTemplate = "To learn how to define your cover letter template. \n\nCheck out the getting started video: https://www.youtube.com/watch?v=IQzjlVIDUsk&ab_channel=UpworkExtension";
 const basicSignature = "Looking forward to working with you.\n\nBest Regards";
 
 let port = chrome.runtime.connect({name: "from cs"});
@@ -195,7 +195,7 @@ function fillHiName(jobID) {
         return new Promise((resolve, reject) => {
             chrome.storage.local.get("signature", function(sign) { 
                 // console.log(sign.signature);
-                if (sign.signature != null) {
+                if (sign.signature != null && sign.signature.length > 0) {
                     resolve(sign.signature);
                     signatureFind = sign.signature;
                 } else {
@@ -210,7 +210,7 @@ function fillHiName(jobID) {
         return new Promise((resolve, reject) => {
             chrome.storage.local.get("template", function(sign) { 
                 // console.log(sign.template);
-                if (sign.template != null) {
+                if (sign.template != null && sign.template.length > 0) {
                     resolve(sign.template);
                     templateFind = sign.template;
                 } else {

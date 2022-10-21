@@ -18,7 +18,7 @@ chrome.storage.local.get({template}, function(sign) {
     if (Object.keys(sign.template).length != 0) {
         btnTemp.innerText = sign.template; 
     } else {
-        btnTemp.innerHTML = "[MESSAGE FROM THE UPWORK COVER LETTER AUTOFILLER WEB EXTENSION]<br><br>[Click on this text and delete it to write your own cover letter template, and then save it]<br><br>[The show button allow you to see your current template]<br>[On the menu, you can find the signature part to define your own signature]<br>[if you have any questions: extensionfabien@gmail.com]<br><br> I just read your posting. It sounds like you need an expert in cold emails to advise you on everything from the content to the overall strategy. <div><br>I have a background in email marketing and have been doing this for 3 years. Cold emailing in B2B is what I specialize in.</div><div><br>I can work with you to write the content and subject lines, recommend the best technologies for you to use, and more. Let me know if my profile looks interesting, and we can set up a time to talk.</div>"
+        btnTemp.innerHTML = "To learn how to define your cover letter template. \n\nCheck out the getting started video: https://www.youtube.com/watch?v=IQzjlVIDUsk&ab_channel=UpworkExtension"
     }
 });
 
